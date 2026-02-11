@@ -5,6 +5,8 @@ namespace pragmatic\plus18;
 use craft\base\Plugin;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
+use craft\events\RegisterCpNavItemsEvent;
+use craft\web\twig\variables\Cp;
 use yii\base\Event;
 
 class PragmaticPlus18 extends Plugin
