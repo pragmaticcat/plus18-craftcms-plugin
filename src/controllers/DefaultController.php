@@ -2,7 +2,9 @@
 
 namespace pragmatic\plus18\controllers;
 
+use Craft;
 use craft\web\Controller;
+use pragmatic\plus18\PragmaticPlus18;
 use yii\web\Response;
 
 class DefaultController extends Controller
@@ -16,11 +18,21 @@ class DefaultController extends Controller
 
     public function actionGeneral(): Response
     {
-        return $this->renderTemplate('pragmatic-plus18/general');
+        return $this->renderTemplate('pragmatic-plus18/general', [
+            'settings' => PragmaticPlus18::$plugin->getSettings(),
+        ]);
     }
 
     public function actionOptions(): Response
     {
-        return $this->renderTemplate('pragmatic-plus18/options');
+        $languages = [];
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            $languages[] = $site->language;
+        }
+
+        return $this->renderTemplate('pragmatic-plus18/options', [
+            'settings' => PragmaticPlus18::$plugin->getSettings(),
+            'languages' => array_values(array_unique($languages)),
+        ]);
     }
 }

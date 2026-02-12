@@ -1,41 +1,36 @@
 # Pragmatic +18
 
-Craft CMS 5 plugin scaffold for a Pragmatic +18 control panel section, with a two-tab CP interface ready to extend.
+Plugin para Craft CMS 5 que muestra un popup de verificación de edad (+18) en el frontend y permite gestionar textos/configuración desde el panel.
 
-## Features
-- CP section labeled `Pragmatic` with subnavigation item: `+18`
-- +18 section entry point redirects to `General`
-- Two CP tabs: `General` (`/pragmatic-plus18/general`) and `Opciones` (`/pragmatic-plus18/options`)
-- Base Twig layout for +18 pages: `pragmatic-plus18/_layout`
-- Plugin registered as `pragmatic-plus18` for Craft CMS 5 projects
+## Qué incluye
+- Sección CP `Pragmatic > +18` con pestañas `General` y `Opciones`.
+- Inyección automática del popup al final del `<body>` en peticiones de sitio.
+- Persistencia por settings de plugin (Project Config).
+- Configuración multiidioma por idioma de sitio.
 
-## Requirements
-- Craft CMS `^5.0`
-- PHP `>=8.2`
+## Configuración en CP
+### General
+- Activar/desactivar popup.
+- Nombre de cookie.
+- Duración de cookie en días.
+- Edad mínima informativa.
+- URL del logo.
+- Mostrar/ocultar botón `No`.
+- URL de salida para menores (si no hay valor, usa Google).
 
-## Installation
-1. Add the plugin to your Craft project and run `composer install`.
-2. Install the plugin from the Craft Control Panel.
-3. Run migrations when prompted.
+### Opciones
+Para cada idioma detectado en los sitios de Craft:
+- Texto principal de confirmación.
+- Texto botón `Sí`.
+- Texto botón `No`.
+- Texto legal inferior.
 
-## Usage
-### CP
-- Go to `Pragmatic > +18`.
-- Use the **General** tab for global +18 settings (page scaffold ready).
-- Use the **Opciones** tab for additional configuration (page scaffold ready).
+## Comportamiento frontend
+- Si la cookie configurada existe con valor `true`, no muestra popup.
+- Al pulsar `Sí`, guarda cookie y cierra popup.
+- Botón `No` opcional, redirige a la URL configurada.
+- Fallback de idioma: idioma exacto (`es-ES`) -> base (`es`) -> `es` por defecto.
 
-## Project structure
-```
-src/
-  PragmaticPlus18.php
-  controllers/
-    DefaultController.php
-  templates/
-    _layout.twig
-    general.twig
-    options.twig
-```
-
-## Notes
-- This repository currently provides the control panel structure and routing scaffold.
-- Business logic, settings models, and persistence can be added incrementally on top of this base.
+## Requisitos
+- PHP >= 8.2
+- Craft CMS ^5.0

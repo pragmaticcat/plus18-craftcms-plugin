@@ -1,7 +1,78 @@
 {% extends 'pragmatic-plus18/_layout' %}
+{% import '_includes/forms' as forms %}
 
 {% set title = 'General' %}
 {% set selectedTab = 'general' %}
 
 {% block content %}
+  <form method="post" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    {{ actionInput('plugins/save-plugin-settings') }}
+    {{ hiddenInput('pluginHandle', 'pragmatic-plus18') }}
+
+    {{ forms.lightswitchField({
+      label: 'Popup activo',
+      instructions: 'Muestra el popup de verificación +18 en todas las páginas del frontend.',
+      id: 'enabled',
+      name: 'settings[enabled]',
+      on: settings.enabled ?? true,
+    }) }}
+
+    {{ forms.textField({
+      label: 'Nombre de la cookie',
+      id: 'cookieName',
+      name: 'settings[cookieName]',
+      required: true,
+      value: settings.cookieName ?? 'silverbranch_age_check',
+      instructions: 'Identificador de la cookie que guarda la confirmación de edad.',
+    }) }}
+
+    {{ forms.textField({
+      label: 'Duración de cookie (días)',
+      id: 'cookieDays',
+      type: 'number',
+      min: 1,
+      name: 'settings[cookieDays]',
+      value: settings.cookieDays ?? 1,
+      instructions: 'Número de días antes de volver a mostrar el popup.',
+    }) }}
+
+    {{ forms.textField({
+      label: 'Edad mínima',
+      id: 'minimumAge',
+      type: 'number',
+      min: 1,
+      name: 'settings[minimumAge]',
+      value: settings.minimumAge ?? 18,
+      instructions: 'Valor informativo para mostrar en el modal (por defecto 18).',
+    }) }}
+
+    {{ forms.textField({
+      label: 'URL del logo',
+      id: 'logoUrl',
+      name: 'settings[logoUrl]',
+      value: settings.logoUrl ?? '',
+      instructions: 'Ejemplo: /assets/images/age-verification-logo.svg',
+    }) }}
+
+    {{ forms.lightswitchField({
+      label: 'Mostrar botón “No”',
+      instructions: 'Si está activo, muestra un botón para salir del sitio.',
+      id: 'showNoButton',
+      name: 'settings[showNoButton]',
+      on: settings.showNoButton ?? false,
+    }) }}
+
+    {{ forms.textField({
+      label: 'URL para menores (botón “No”)',
+      id: 'underageUrl',
+      name: 'settings[underageUrl]',
+      value: settings.underageUrl ?? '',
+      instructions: 'Si no se indica, se usará https://www.google.com.',
+    }) }}
+
+    <div class="buttons">
+      <button type="submit" class="btn submit">Guardar</button>
+    </div>
+  </form>
 {% endblock %}

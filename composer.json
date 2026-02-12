@@ -28,7 +28,7 @@
     "developer": "Pragmatic",
     "developerUrl": "https://www.pragmatic.cat",
     "documentationUrl": "https://github.com/pragmaticcat/pragmatic-plus18/blob/main/README.md",
-    "hasSettings": false,
+    "hasSettings": true,
     "hasCpSection": true
   }
 }

@@ -2,11 +2,15 @@
 
 namespace pragmatic\plus18;
 
+use Craft;
+use craft\base\Model;
 use craft\base\Plugin;
+use craft\events\RegisterCpNavItemsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
-use craft\events\RegisterCpNavItemsEvent;
+use craft\web\View;
 use craft\web\twig\variables\Cp;
+use pragmatic\plus18\models\Settings;
 use yii\base\Event;
 
 class PragmaticPlus18 extends Plugin
@@ -14,9 +18,12 @@ class PragmaticPlus18 extends Plugin
     public bool $hasCpSection = true;
     public string $templateRoot = 'src/templates';
 
+    public static PragmaticPlus18 $plugin;
+
     public function init(): void
     {
         parent::init();
+        self::$plugin = $this;
 
         Event::on(
             UrlManager::class,
@@ -28,11 +35,10 @@ class PragmaticPlus18 extends Plugin
             }
         );
 
-        // Register nav item under shared "Pragmatic" group
         Event::on(
             Cp::class,
             Cp::EVENT_REGISTER_CP_NAV_ITEMS,
-            function(RegisterCpNavItemsEvent $event) {
+            function (RegisterCpNavItemsEvent $event) {
                 $groupKey = null;
                 foreach ($event->navItems as $key => $item) {
                     if (($item['label'] ?? '') === 'Pragmatic' && isset($item['subnav'])) {
@@ -49,7 +55,6 @@ class PragmaticPlus18 extends Plugin
                         'subnav' => [],
                     ];
 
-                    // Insert after the first matching nav item
                     $afterKey = null;
                     $insertAfter = ['users', 'assets', 'categories', 'entries'];
                     foreach ($insertAfter as $target) {
@@ -62,7 +67,7 @@ class PragmaticPlus18 extends Plugin
                     }
 
                     if ($afterKey !== null) {
-                        $pos = array_search($afterKey, array_keys($event->navItems)) + 1;
+                        $pos = array_search($afterKey, array_keys($event->navItems), true) + 1;
                         $event->navItems = array_merge(
                             array_slice($event->navItems, 0, $pos, true),
                             ['pragmatic' => $newItem],
@@ -81,6 +86,37 @@ class PragmaticPlus18 extends Plugin
                 ];
             }
         );
+
+        Event::on(
+            View::class,
+            View::EVENT_END_BODY,
+            function () {
+                $request = Craft::$app->getRequest();
+                if (!$request->getIsSiteRequest()) {
+                    return;
+                }
+
+                /** @var Settings $settings */
+                $settings = $this->getSettings();
+                if (!$settings->enabled) {
+                    return;
+                }
+
+                try {
+                    echo Craft::$app->getView()->renderTemplate('pragmatic-plus18/frontend/_age-gate', [
+                        'settings' => $settings,
+                        'language' => Craft::$app->language,
+                    ]);
+                } catch (\Throwable $e) {
+                    Craft::error($e->getMessage(), __METHOD__);
+                }
+            }
+        );
+    }
+
+    protected function createSettingsModel(): ?Model
+    {
+        return new Settings();
     }
 
     public function getCpNavItem(): ?array
