@@ -1,8 +1,13 @@
 {% extends 'pragmatic-plus18/_layout' %}
 {% import '_includes/forms' as forms %}
 
-{% set title = 'General' %}
+{% set title = 'General'|t('pragmatic-plus18') %}
 {% set selectedTab = 'general' %}
+
+{% set crumbs = [
+  { label: '+18', url: url('pragmatic-plus18') },
+  { label: 'General'|t('pragmatic-plus18'), url: url('pragmatic-plus18/general') },
+] %}
 
 {% block content %}
   <form method="post" accept-charset="UTF-8">
@@ -11,68 +16,68 @@
     {{ hiddenInput('pluginHandle', 'pragmatic-plus18') }}
 
     {{ forms.lightswitchField({
-      label: 'Popup activo',
-      instructions: 'Muestra el popup de verificación +18 en todas las páginas del frontend.',
+      label: 'Popup active'|t('pragmatic-plus18'),
+      instructions: 'Shows the +18 verification popup on all frontend pages.'|t('pragmatic-plus18'),
       id: 'enabled',
       name: 'settings[enabled]',
       on: settings.enabled ?? true,
     }) }}
 
     {{ forms.textField({
-      label: 'Nombre de la cookie',
+      label: 'Cookie name'|t('pragmatic-plus18'),
       id: 'cookieName',
       name: 'settings[cookieName]',
       required: true,
       value: settings.cookieName ?? 'silverbranch_age_check',
-      instructions: 'Identificador de la cookie que guarda la confirmación de edad.',
+      instructions: 'Identifier of the cookie that stores the age confirmation.'|t('pragmatic-plus18'),
     }) }}
 
     {{ forms.textField({
-      label: 'Duración de cookie (días)',
+      label: 'Cookie duration (days)'|t('pragmatic-plus18'),
       id: 'cookieDays',
       type: 'number',
       min: 1,
       name: 'settings[cookieDays]',
       value: settings.cookieDays ?? 1,
-      instructions: 'Número de días antes de volver a mostrar el popup.',
+      instructions: 'Number of days before showing the popup again.'|t('pragmatic-plus18'),
     }) }}
 
     {{ forms.textField({
-      label: 'Edad mínima',
+      label: 'Minimum age'|t('pragmatic-plus18'),
       id: 'minimumAge',
       type: 'number',
       min: 1,
       name: 'settings[minimumAge]',
       value: settings.minimumAge ?? 18,
-      instructions: 'Valor informativo para mostrar en el modal (por defecto 18).',
+      instructions: 'Informational value to display in the modal (default 18).'|t('pragmatic-plus18'),
     }) }}
 
     {{ forms.textField({
-      label: 'URL del logo',
+      label: 'Logo URL'|t('pragmatic-plus18'),
       id: 'logoUrl',
       name: 'settings[logoUrl]',
       value: settings.logoUrl ?? '',
-      instructions: 'Ejemplo: /assets/images/age-verification-logo.svg',
+      instructions: 'Example: /assets/images/age-verification-logo.svg'|t('pragmatic-plus18'),
     }) }}
 
     {{ forms.lightswitchField({
-      label: 'Mostrar botón “No”',
-      instructions: 'Si está activo, muestra un botón para salir del sitio.',
+      label: 'Show "No" button'|t('pragmatic-plus18'),
+      instructions: 'If active, shows a button to exit the site.'|t('pragmatic-plus18'),
       id: 'showNoButton',
       name: 'settings[showNoButton]',
       on: settings.showNoButton ?? false,
     }) }}
 
     {{ forms.textField({
-      label: 'URL para menores (botón “No”)',
+      label: 'URL for underage users ("No" button)'|t('pragmatic-plus18'),
       id: 'underageUrl',
       name: 'settings[underageUrl]',
       value: settings.underageUrl ?? '',
-      instructions: 'Si no se indica, se usará https://www.google.com.',
+      instructions: 'If not specified, https://www.google.com will be used.'|t('pragmatic-plus18'),
     }) }}
 
     <div class="buttons">
-      <button type="submit" class="btn submit">Guardar</button>
+      <button type="submit" class="btn submit">{{ 'Save'|t('pragmatic-plus18') }}</button>
     </div>
   </form>
 {% endblock %}

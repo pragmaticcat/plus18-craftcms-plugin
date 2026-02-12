@@ -90,7 +90,7 @@ class PragmaticPlus18 extends Plugin
 
                 $event->navItems[$groupKey]['subnav']['plus18'] = [
                     'label' => '+18',
-                    'url' => 'pragmatic-plus18/general',
+                    'url' => 'pragmatic-plus18',
                 ];
 
                 $path = Craft::$app->getRequest()->getPathInfo();

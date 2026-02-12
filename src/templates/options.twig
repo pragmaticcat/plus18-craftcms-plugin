@@ -1,8 +1,13 @@
 {% extends 'pragmatic-plus18/_layout' %}
 {% import '_includes/forms' as forms %}
 
-{% set title = 'Opciones' %}
+{% set title = 'Options'|t('pragmatic-plus18') %}
 {% set selectedTab = 'options' %}
+
+{% set crumbs = [
+  { label: '+18', url: url('pragmatic-plus18') },
+  { label: 'Options'|t('pragmatic-plus18'), url: url('pragmatic-plus18/options') },
+] %}
 {% set translations = settings.translations ?? {} %}
 
 {% set defaults = {
@@ -37,31 +42,31 @@
       {% set fallback = defaults[lang] ?? defaults.es %}
 
       <hr>
-      <h2 style="margin:18px 0 12px;">Idioma {{ lang|upper }}</h2>
+      <h2 style="margin:18px 0 12px;">{{ 'Language'|t('pragmatic-plus18') }} {{ lang|upper }}</h2>
 
       {{ forms.textField({
-        label: 'Texto principal',
+        label: 'Main text'|t('pragmatic-plus18'),
         id: 'previousText-' ~ lang,
         name: 'settings[translations][' ~ lang ~ '][previousText]',
         value: current.previousText ?? fallback.previousText,
       }) }}
 
       {{ forms.textField({
-        label: 'Texto botón Sí',
+        label: 'Yes button text'|t('pragmatic-plus18'),
         id: 'yesText-' ~ lang,
         name: 'settings[translations][' ~ lang ~ '][yesText]',
         value: current.yesText ?? fallback.yesText,
       }) }}
 
       {{ forms.textField({
-        label: 'Texto botón No',
+        label: 'No button text'|t('pragmatic-plus18'),
         id: 'noText-' ~ lang,
         name: 'settings[translations][' ~ lang ~ '][noText]',
         value: current.noText ?? fallback.noText,
       }) }}
 
       {{ forms.textareaField({
-        label: 'Texto legal inferior',
+        label: 'Bottom legal text'|t('pragmatic-plus18'),
         id: 'afterText-' ~ lang,
         name: 'settings[translations][' ~ lang ~ '][afterText]',
         value: current.afterText ?? fallback.afterText,
@@ -70,7 +75,7 @@
     {% endfor %}
 
     <div class="buttons" style="margin-top:24px;">
-      <button type="submit" class="btn submit">Guardar</button>
+      <button type="submit" class="btn submit">{{ 'Save'|t('pragmatic-plus18') }}</button>
     </div>
   </form>
 {% endblock %}
