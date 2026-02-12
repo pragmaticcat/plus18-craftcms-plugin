@@ -92,6 +92,11 @@ class PragmaticPlus18 extends Plugin
                     'label' => '+18',
                     'url' => 'pragmatic-plus18/general',
                 ];
+
+                $path = Craft::$app->getRequest()->getPathInfo();
+                if ($path === 'pragmatic-plus18' || str_starts_with($path, 'pragmatic-plus18/')) {
+                    $event->navItems[$groupKey]['url'] = 'pragmatic-plus18';
+                }
             }
         );
 
