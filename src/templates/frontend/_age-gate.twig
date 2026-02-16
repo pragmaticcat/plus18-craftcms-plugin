@@ -1,18 +1,42 @@
 {% set translations = settings.translations ?? {} %}
-{% set langFull = language ?? craft.app.language %}
-{% set langShort = langFull|replace({'_':'-'})|split('-')|first %}
-{% set copy = translations[langFull] ?? translations[langShort] ?? translations.es ?? {
-  previousText: 'Para acceder a esta web debes ser mayor de edad. ¿Estás de acuerdo?',
-  yesText: 'Sí',
-  noText: 'No',
-  afterText: 'Accediendo a nuestra web certificas que eres mayor de edad y consciente de las regulaciones sobre el consumo de bebidas alcohólicas en tu país.'
+{% set currentSiteId = craft.app.sites.currentSite.id %}
+{% set currentSite = craft.app.sites.currentSite %}
+{% set currentLang = currentSite.language|replace({'_':'-'})|split('-')|first %}
+{% set defaults = {
+  ca: {
+    previousText: "Per accedir a aquest web has de ser major d'edat. Hi estàs d'acord?",
+    yesText: 'Sí',
+    noText: 'No',
+    afterText: "Accedint al nostre web certifiques que ets major d'edat i que ets conscient de les regulacions sobre el consum de begudes alcohòliques al teu país."
+  },
+  es: {
+    previousText: 'Para acceder a esta web debes ser mayor de edad. ¿Estás de acuerdo?',
+    yesText: 'Sí',
+    noText: 'No',
+    afterText: 'Accediendo a nuestra web certificas que eres mayor de edad y consciente de las regulaciones sobre el consumo de bebidas alcohólicas en tu país.'
+  },
+  en: {
+    previousText: 'To access this website you must be of legal age. Do you agree?',
+    yesText: 'Yes',
+    noText: 'No',
+    afterText: 'By accessing our website you certify that you are of legal age and aware of the regulations on the consumption of alcoholic beverages in your country.'
+  }
+} %}
+{% set siteCopy = translations[currentSiteId] ?? {} %}
+{% set fallbackCopy = defaults[currentLang] ?? defaults.es %}
+{% set copy = {
+  previousText: siteCopy.previousText ?? fallbackCopy.previousText,
+  yesText: siteCopy.yesText ?? fallbackCopy.yesText,
+  noText: siteCopy.noText ?? fallbackCopy.noText,
+  afterText: siteCopy.afterText ?? fallbackCopy.afterText,
 } %}
 
 {% set cookieName = settings.cookieName ?? 'silverbranch_age_check' %}
 {% set cookieDays = settings.cookieDays ?? 1 %}
 {% set logoUrl = settings.logoUrl ?? '' %}
 {% set showNoButton = settings.showNoButton ?? false %}
-{% set underageUrl = settings.underageUrl ?: 'https://www.google.com' %}
+{% set underageUrls = settings.underageUrls ?? {} %}
+{% set underageUrl = underageUrls[currentSiteId] ?? 'https://www.google.com' %}
 
 <style>
   .age-verification-wrapper {

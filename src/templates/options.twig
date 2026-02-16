@@ -5,10 +5,11 @@
 {% set selectedTab = 'options' %}
 
 {% set crumbs = [
-  { label: '+18', url: url('pragmatic-plus18') },
-  { label: 'Options'|t('pragmatic-plus18'), url: url('pragmatic-plus18/options') },
+  { label: '+18', url: url('pragmatic-plus18', { site: selectedSite.handle }) },
+  { label: 'Options'|t('pragmatic-plus18'), url: url('pragmatic-plus18/options', { site: selectedSite.handle }) },
 ] %}
 {% set translations = settings.translations ?? {} %}
+{% set selectedLang = selectedSite.language|replace({'_':'-'})|split('-')|first %}
 
 {% set defaults = {
   ca: {
@@ -36,43 +37,46 @@
     {{ csrfInput() }}
     {{ actionInput('plugins/save-plugin-settings') }}
     {{ hiddenInput('pluginHandle', 'pragmatic-plus18') }}
+    {{ redirectInput('pragmatic-plus18/options', { site: selectedSite.handle }) }}
 
-    {% for lang in languages %}
-      {% set current = translations[lang] ?? {} %}
-      {% set fallback = defaults[lang] ?? defaults.es %}
+    {% set current = translations[selectedSiteId] ?? {} %}
+    {% set fallback = defaults[selectedLang] ?? defaults.es %}
 
-      <hr>
-      <h2 style="margin:18px 0 12px;">{{ 'Language'|t('pragmatic-plus18') }} {{ lang|upper }}</h2>
+    <hr>
+    <h2 style="margin:18px 0 12px;">{{ selectedSite.name }} ({{ selectedSite.language|upper }})</h2>
 
-      {{ forms.textField({
-        label: 'Main text'|t('pragmatic-plus18'),
-        id: 'previousText-' ~ lang,
-        name: 'settings[translations][' ~ lang ~ '][previousText]',
-        value: current.previousText ?? fallback.previousText,
-      }) }}
+    {{ forms.textField({
+      label: 'Main text'|t('pragmatic-plus18'),
+      id: 'previousText-' ~ selectedSiteId,
+      name: 'settings[translations][' ~ selectedSiteId ~ '][previousText]',
+      value: current.previousText ?? fallback.previousText,
+      translatable: true,
+    }) }}
 
-      {{ forms.textField({
-        label: 'Yes button text'|t('pragmatic-plus18'),
-        id: 'yesText-' ~ lang,
-        name: 'settings[translations][' ~ lang ~ '][yesText]',
-        value: current.yesText ?? fallback.yesText,
-      }) }}
+    {{ forms.textField({
+      label: 'Yes button text'|t('pragmatic-plus18'),
+      id: 'yesText-' ~ selectedSiteId,
+      name: 'settings[translations][' ~ selectedSiteId ~ '][yesText]',
+      value: current.yesText ?? fallback.yesText,
+      translatable: true,
+    }) }}
 
-      {{ forms.textField({
-        label: 'No button text'|t('pragmatic-plus18'),
-        id: 'noText-' ~ lang,
-        name: 'settings[translations][' ~ lang ~ '][noText]',
-        value: current.noText ?? fallback.noText,
-      }) }}
+    {{ forms.textField({
+      label: 'No button text'|t('pragmatic-plus18'),
+      id: 'noText-' ~ selectedSiteId,
+      name: 'settings[translations][' ~ selectedSiteId ~ '][noText]',
+      value: current.noText ?? fallback.noText,
+      translatable: true,
+    }) }}
 
-      {{ forms.textareaField({
-        label: 'Bottom legal text'|t('pragmatic-plus18'),
-        id: 'afterText-' ~ lang,
-        name: 'settings[translations][' ~ lang ~ '][afterText]',
-        value: current.afterText ?? fallback.afterText,
-        rows: 3,
-      }) }}
-    {% endfor %}
+    {{ forms.textareaField({
+      label: 'Bottom legal text'|t('pragmatic-plus18'),
+      id: 'afterText-' ~ selectedSiteId,
+      name: 'settings[translations][' ~ selectedSiteId ~ '][afterText]',
+      value: current.afterText ?? fallback.afterText,
+      rows: 3,
+      translatable: true,
+    }) }}
 
     <div class="buttons" style="margin-top:24px;">
       <button type="submit" class="btn submit">{{ 'Save'|t('pragmatic-plus18') }}</button>

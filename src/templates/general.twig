@@ -5,15 +5,18 @@
 {% set selectedTab = 'general' %}
 
 {% set crumbs = [
-  { label: '+18', url: url('pragmatic-plus18') },
-  { label: 'General'|t('pragmatic-plus18'), url: url('pragmatic-plus18/general') },
+  { label: '+18', url: url('pragmatic-plus18', { site: selectedSite.handle }) },
+  { label: 'General'|t('pragmatic-plus18'), url: url('pragmatic-plus18/general', { site: selectedSite.handle }) },
 ] %}
+{% set underageUrls = settings.underageUrls ?? {} %}
+{% set underageUrlValue = underageUrls[selectedSiteId] ?? '' %}
 
 {% block content %}
   <form method="post" accept-charset="UTF-8">
     {{ csrfInput() }}
     {{ actionInput('plugins/save-plugin-settings') }}
     {{ hiddenInput('pluginHandle', 'pragmatic-plus18') }}
+    {{ redirectInput('pragmatic-plus18/general', { site: selectedSite.handle }) }}
 
     {{ forms.lightswitchField({
       label: 'Popup active'|t('pragmatic-plus18'),
@@ -71,9 +74,10 @@
     {{ forms.textField({
       label: 'URL for underage users ("No" button)'|t('pragmatic-plus18'),
       id: 'underageUrl',
-      name: 'settings[underageUrl]',
-      value: settings.underageUrl ?? '',
+      name: 'settings[underageUrls][' ~ selectedSiteId ~ ']',
+      value: underageUrlValue,
       instructions: 'If not specified, https://www.google.com will be used.'|t('pragmatic-plus18'),
+      translatable: true,
     }) }}
 
     <div class="buttons">

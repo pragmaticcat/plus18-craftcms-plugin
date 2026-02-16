@@ -12,7 +12,10 @@ class Settings extends Model
     public int $minimumAge = 18;
     public ?string $logoUrl = null;
     public bool $showNoButton = false;
-    public ?string $underageUrl = null;
+    /**
+     * @var array<int|string,string>
+     */
+    public array $underageUrls = [];
 
     /**
      * @var array<string,array{previousText?:string,yesText?:string,noText?:string,afterText?:string}>
@@ -24,10 +27,10 @@ class Settings extends Model
         return [
             [['enabled', 'showNoButton'], 'boolean'],
             [['cookieName'], 'required'],
-            [['cookieName', 'logoUrl', 'underageUrl'], 'string'],
+            [['cookieName', 'logoUrl'], 'string'],
             [['cookieDays', 'minimumAge'], 'integer', 'min' => 1],
-            [['translations'], 'safe'],
-            [['logoUrl', 'underageUrl'], 'default', 'value' => null],
+            [['translations', 'underageUrls'], 'safe'],
+            [['logoUrl'], 'default', 'value' => null],
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace pragmatic\plus18\controllers;
 
 use Craft;
+use craft\helpers\Cp;
 use craft\web\Controller;
 use pragmatic\plus18\PragmaticPlus18;
 use yii\web\Response;
@@ -18,21 +19,23 @@ class DefaultController extends Controller
 
     public function actionGeneral(): Response
     {
+        $selectedSite = Cp::requestedSite() ?? Craft::$app->getSites()->getPrimarySite();
+
         return $this->renderTemplate('pragmatic-plus18/general', [
             'settings' => PragmaticPlus18::$plugin->getSettings(),
+            'selectedSite' => $selectedSite,
+            'selectedSiteId' => (int)$selectedSite->id,
         ]);
     }
 
     public function actionOptions(): Response
     {
-        $languages = [];
-        foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            $languages[] = $site->language;
-        }
+        $selectedSite = Cp::requestedSite() ?? Craft::$app->getSites()->getPrimarySite();
 
         return $this->renderTemplate('pragmatic-plus18/options', [
             'settings' => PragmaticPlus18::$plugin->getSettings(),
-            'languages' => array_values(array_unique($languages)),
+            'selectedSite' => $selectedSite,
+            'selectedSiteId' => (int)$selectedSite->id,
         ]);
     }
 }
